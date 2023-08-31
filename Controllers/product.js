@@ -1,14 +1,14 @@
-const { Product } = require("../Models/Product.models");
+const { Product } = require("../Models/Product.models")
 
 // Controller to create a new product
 async function createProduct(req, res) {
   try {
-    const { title, price, description, category } = req.body;
+    const { title, price, description, categoryId } = req.body;
     const product = await Product.create({
       title,
       price,
       description,
-      category,
+      categoryId,
     });
     return res.status(201).json(product);
   } catch (error) {
@@ -34,7 +34,7 @@ async function getProducts(req, res) {
 async function updateProduct(req, res) {
   try {
     const { productId } = req.params;
-    const { title, price, description, category } = req.body;
+    const { title, price, description, categoryId } = req.body;
     const product = await Product.findByPk(productId);
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
@@ -42,7 +42,7 @@ async function updateProduct(req, res) {
     product.title = title;
     product.price = price;
     product.description = description;
-    product.category = category;
+    product.categoryId = categoryId;
     await product.save();
     return res.status(200).json(product);
   } catch (error) {

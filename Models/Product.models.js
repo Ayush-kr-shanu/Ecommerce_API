@@ -20,9 +20,13 @@ const Product = seq.define("Product", {
     type: sequelize.TEXT,
     allowNull: false,
   },
-  category: {
-    type: sequelize.STRING,
+  categoryId: {
+    type: sequelize.INTEGER,
     allowNull: false,
+    references: {
+      model: "categories",
+      key: "id",
+    },
   },
   availability: {
     type: sequelize.BOOLEAN,
