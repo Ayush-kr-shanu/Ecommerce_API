@@ -1,5 +1,6 @@
 const sequelize = require("sequelize");
 const { seq } = require("../Config/db");
+const { Category } = require("./Category.model");
 
 const Product = seq.define("Product", {
   id: {
@@ -44,5 +45,9 @@ const Product = seq.define("Product", {
     defaultValue: sequelize.NOW,
   },
 });
+
+Product.belongsTo(Category, {
+  foreignKey: "categoryId",
+})
 
 module.exports = { Product };

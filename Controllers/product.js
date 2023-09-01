@@ -1,9 +1,14 @@
+const { Category } = require("../Models/Category.model");
 const { Product } = require("../Models/Product.models")
 
-// Controller to create a new product
-async function createProduct(req, res) {
+const productController = {
+  // Controller to create a new product
+async createProduct(req, res) {
   try {
     const { title, price, description, categoryId } = req.body;
+    if(!title || !price || !description || !categoryId){
+      return res.status(401).json({ msg: "All details are mandatory" })
+    }
     const product = await Product.create({
       title,
       price,
@@ -12,26 +17,48 @@ async function createProduct(req, res) {
     });
     return res.status(201).json(product);
   } catch (error) {
-    return res.status(500).json({ error: "Failed to create product" });
+    return res.status(500).json({ error: "Failed to create product", err:error.message});
   }
-}
+},
 
 // Controller to get all products or products by category
-async function getProducts(req, res) {
+async getProducts(req, res) {
   try {
-    const { categoryId } = req.params;
-    const whereCondition = categoryId ? { category: categoryId } : {};
     const products = await Product.findAll({
-      where: whereCondition,
+      include:[
+        {
+          model:Category,
+          attributes:["name"]
+        }
+      ]
     });
     return res.status(200).json(products);
   } catch (error) {
-    return res.status(500).json({ error: "Failed to retrieve products" });
+    return res.status(500).json({ error: "Failed to retrieve products", err:error.message });
   }
-}
+},
+
+// Get product by Id
+async getProductsById(req, res) {
+  try {
+    const { productId } = req.params
+    const products = await Product.findAll({
+      where:productId,
+      include:[
+        {
+          model:Category,
+          attributes:["name"]
+        }
+      ]
+    });
+    return res.status(200).json(products);
+  } catch (error) {
+    return res.status(500).json({ error: "Failed to retrieve products", err:error.message });
+  }
+},
 
 // Controller to update a product
-async function updateProduct(req, res) {
+async updateProduct(req, res) {
   try {
     const { productId } = req.params;
     const { title, price, description, categoryId } = req.body;
@@ -46,12 +73,12 @@ async function updateProduct(req, res) {
     await product.save();
     return res.status(200).json(product);
   } catch (error) {
-    return res.status(500).json({ error: "Failed to update product" });
+    return res.status(500).json({ error: "Failed to update product", err:error.message });
   }
-}
+},
 
 // Controller to delete a product
-async function deleteProduct(req, res) {
+async deleteProduct(req, res) {
   try {
     const { productId } = req.params;
     const product = await Product.findByPk(productId);
@@ -61,13 +88,11 @@ async function deleteProduct(req, res) {
     await product.destroy();
     return res.status(204).json();
   } catch (error) {
-    return res.status(500).json({ error: "Failed to delete product" });
+    return res.status(500).json({ error: "Failed to delete product", err:error.message });
   }
+}
 }
 
 module.exports = {
-  createProduct,
-  getProducts,
-  updateProduct,
-  deleteProduct,
+  productController
 };

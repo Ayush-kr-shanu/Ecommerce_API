@@ -1,5 +1,6 @@
 const sequelize = require("sequelize");
 const { seq } = require("../Config/db");
+const { Cart } = require("./Cart.model");
 
 const Order = seq.define("Order", {
   id: {
@@ -8,11 +9,11 @@ const Order = seq.define("Order", {
     primaryKey: true,
     allowNull: false,
   },
-  productId: {
+  cartId: {
     type: sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: "products",
+      model: "carts",
       key: "id",
     },
   },
@@ -23,11 +24,6 @@ const Order = seq.define("Order", {
       model: "users",
       key: "id",
     },
-  },
-  quantity: {
-    type: sequelize.INTEGER,
-    allowNull: false,
-    defaultValue: 1,
   },
   createdAt: {
     type: sequelize.DATE,
@@ -41,5 +37,8 @@ const Order = seq.define("Order", {
   },
 });
 
+Order.belongsTo(Cart, {
+  foreignKey: "cartId",
+})
 
 module.exports= {Order}

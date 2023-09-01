@@ -61,7 +61,7 @@ const UserController = {
       });
 
       return res
-        .status(201)
+        .status(200)
         .json({ msg: "Logged in successfully", Token: token, user });
     } catch (err) {
       return res.status(500).json({ msg: "Server error", err: err.message });
