@@ -21,7 +21,7 @@ Make sure you have Node.js and npm installed on your machine.
 
 ### Environment Variables
 
-```DATABASE=leading-tech``` <br>
+```DATABASE=data base name``` <br>
 ```USER=root``` <br>
 ```PASS=your_password``` <br>
 ```HOST=localhost``` <br>
